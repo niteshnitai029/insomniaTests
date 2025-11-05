@@ -29,6 +29,7 @@ jobs:
               run collection "My first collection" --workingDir /Insomnia_2025-11-05.yaml --ci --verbose | tee reports/inso-output.log
             export INSOTEST_EXIT_CODE=${PIPESTATUS[0]}
             exit $INSOTEST_EXIT_CODE
+            
 
       # 4️⃣ Upload Inso CLI log (always)
       - name: Upload Inso CLI log
