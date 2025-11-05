@@ -16,7 +16,7 @@ jobs:
       - name: Setup Inso CLI
         uses: kong/setup-inso@v2
         with:
-          inso-version: '11.6.0' # latest stable (adjust if needed)
+          inso-version: '11.3.0'
 
       - name: Create report folder
         run: mkdir -p reports
