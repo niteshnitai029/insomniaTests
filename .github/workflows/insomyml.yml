@@ -26,7 +26,7 @@ jobs:
             docker run --rm \
               -v /home/runner/work/insomniaTests/insomniaTests/insomnia:/workspace \
               kong/inso:11.6.0 \
-              run collection "My first collection" --workingDir /workspace/Insomnia_2025-11-05.yaml --ci --verbose | tee reports/inso-output.log
+              run collection "My first collection" --workingDir /Insomnia_2025-11-05.yaml --ci --verbose | tee reports/inso-output.log
             export INSOTEST_EXIT_CODE=${PIPESTATUS[0]}
             exit $INSOTEST_EXIT_CODE
 
