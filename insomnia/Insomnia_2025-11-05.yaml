@@ -1,0 +1,85 @@
+type: collection.insomnia.rest/5.0
+name: My first collection
+meta:
+  id: wrk_2374089e2ada47fba5816d0b02c17287
+  created: 1762305227006
+  modified: 1762305227006
+  description: ""
+collection:
+  - url: https://jsonplaceholder.typicode.com/posts
+    name: MyfirstInsoTests
+    meta:
+      id: req_344ad49cd80c461984bef634a2166864
+      created: 1762305227108
+      modified: 1762305713807
+      isPrivate: false
+      description: ""
+      sortKey: -1762305227108
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "title": "foo",
+          "body": "bar",
+          "userId": 1
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.0.0
+    authentication:
+      type: none
+    scripts:
+      afterResponse: >
+        const json = insomnia.response.json();
+
+
+        // Try multiple possible fields for status and normalise to a number
+        when possible
+
+        const raw = insomnia.response.statusCode ?? insomnia.response.status ??
+        insomnia.response.statusText ?? '';
+
+        let status = Number(raw);
+
+
+        // If raw is the text "Created", assume 201
+
+        if (!status && String(raw).toLowerCase() === 'created') status = 201;
+
+
+        insomnia.test('Status code is 201', () => {
+          insomnia.expect(status).to.equal(201);
+        });
+
+
+        insomnia.test('Response contains expected fields', () => {
+          insomnia.expect(json).to.have.property('id');
+          insomnia.expect(json).to.have.property('title', 'foo');
+          insomnia.expect(json).to.have.property('body', 'bar');
+          insomnia.expect(json).to.have.property('userId', 1);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_835c6c27d9c0178df777df09367e41bbbf839bc0
+    created: 1762305227013
+    modified: 1762305717815
+environments:
+  name: Base Environment
+  meta:
+    id: env_835c6c27d9c0178df777df09367e41bbbf839bc0
+    created: 1762305227009
+    modified: 1762305717822
+    isPrivate: false
+    
