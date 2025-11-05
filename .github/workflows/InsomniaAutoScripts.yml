@@ -40,3 +40,4 @@ jobs:
         with:
           name: inso-run-logs
           path: reports/inso-output.log
+
