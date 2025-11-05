@@ -10,24 +10,37 @@ jobs:
   run-insomnia-tests:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Inso CLI
-        uses: kong/setup-inso@v2
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          inso-version: '10.3.1'
+          node-version: '20'   # ensure compatible with latest inso
 
-      - name: Create report folder
+      # 3️⃣ Install latest Inso CLI globally
+      - name: Install latest Inso CLI
+        run: npm install -g insomnia-inso@latest
+
+      # 4️⃣ Create reports folder
+      - name: Create reports folder
         run: mkdir -p reports
 
+      # 5️⃣ Run Insomnia tests
       - name: Run Insomnia tests
         id: inso_test
         run: |
           set -o pipefail
+          # Run tests and save exit code
           inso run test --workspace ./insomnia/Insomnia_2025-11-05.yaml --ci --verbose | tee reports/inso-output.log
+          export INSOTEST_EXIT_CODE=${PIPESTATUS[0]}
+          exit $INSOTEST_EXIT_CODE
 
+      # 6️⃣ Upload Inso CLI log (always)
       - name: Upload Inso CLI log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: inso-run-logs
