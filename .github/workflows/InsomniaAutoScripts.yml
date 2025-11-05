@@ -1,0 +1,43 @@
+name: Run Insomnia API Tests (Docker Inso)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  #schedule:
+   # - cron: '*/15 * * * *'  # Runs every 15 minutes (every hour, every day, etc.)
+jobs:
+  run-insomnia-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Create reports folder
+      - name: Create reports folder
+        run: mkdir -p reports
+
+      # 3️⃣ Run Insomnia tests via Docker
+      - name: Run Insomnia tests
+        id: inso_test
+        run: |
+          set -o pipefail
+              mkdir -p reports
+              docker run --rm \
+                -v /home/runner/work/insomniaTests/insomniaTests/insomnia:/workspace \
+                kong/inso:11.6.0 \
+                run collection "My first collection" --workingDir /workspace/Insomnia_2025-11-05.yaml --ci --verbose --disableCertValidation | tee reports/inso-output.log
+              export INSOTEST_EXIT_CODE=${PIPESTATUS[0]}
+              exit $INSOTEST_EXIT_CODE
+            
+
+      # 4️⃣ Upload Inso CLI log (always)
+      - name: Upload Inso CLI log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inso-run-logs
+          path: reports/inso-output.log
+
